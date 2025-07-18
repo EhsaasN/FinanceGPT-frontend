@@ -20,7 +20,7 @@ export default function AuthSuccess() {
             localStorage.setItem('authToken', token);
 
             // Fetch user data
-            fetch('/api/auth/profile', {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
