@@ -1,116 +1,64 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/login';
-import Signup from './components/signup';
-import Dashboard from './components/dashboard';
-import LandingPage from './components/LandingPage';
-import AuthSuccess from './components/AuthSuccess';
-import TeamSection from './components/Team';
-import { ThemeProvider } from './contexts/ThemeContext.jsx';
-import './App.css';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function App() {
-    const [user, setUser] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+export default function AuthSuccess() {
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const checkUserSession = () => {
-            try {
-                const storedUser = localStorage.getItem('fgpt_user');
-                const storedLoginStatus = localStorage.getItem('fgpt_isLoggedIn');
+        const handleAuth = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const error = urlParams.get('error');
 
-                if (storedUser && storedLoginStatus === 'true') {
-                    const userData = JSON.parse(storedUser);
-                    setUser(userData);
-                    setIsLoggedIn(true);
+            if (error) {
+                console.error('OAuth authentication failed:', error);
+                navigate('/login?error=' + error);
+                return;
+            }
+
+            if (!token) {
+                navigate('/login?error=no_token');
+                return;
+            }
+
+            try {
+                // Store the token immediately
+                localStorage.setItem('authToken', token);
+
+                // Fetch user profile
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                const data = await response.json();
+
+                if (data?.user) {
+                    localStorage.setItem('fgpt_user', JSON.stringify(data.user));
+                    localStorage.setItem('fgpt_isLoggedIn', 'true');
+
+                    // Force a full page reload to ensure App.jsx re-initializes and picks up login status
+                    window.location.href = '/dashboard'; 
+                } else {
+                    console.error('User profile not found:', data);
+                    navigate('/login?error=profile_fetch_failed');
                 }
-            } catch (error) {
-                console.error('Error loading user session:', error);
-                localStorage.removeItem('fgpt_user');
-                localStorage.removeItem('fgpt_isLoggedIn');
-            } finally {
-                setIsLoading(false);
+            } catch (err) {
+                console.error('Error fetching profile:', err);
+                navigate('/login?error=profile_fetch_failed');
             }
         };
 
-        checkUserSession();
-    }, []);
-
-    const handleLoginSuccess = (userData) => {
-        localStorage.setItem('fgpt_user', JSON.stringify(userData));
-        localStorage.setItem('fgpt_isLoggedIn', 'true');
-        setUser(userData);
-        setIsLoggedIn(true);
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('fgpt_user');
-        localStorage.removeItem('fgpt_isLoggedIn');
-        localStorage.removeItem('authToken');
-        setUser(null);
-        setIsLoggedIn(false);
-    };
-
-    if (isLoading) {
-        return (
-            <ThemeProvider>
-                <div className="h-screen flex items-center justify-center bg-gray-900 text-white">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mx-auto mb-4"></div>
-                        <p>Loading...</p>
-                    </div>
-                </div>
-            </ThemeProvider>
-        );
-    }
+        handleAuth();
+    }, [navigate]);
 
     return (
-        <ThemeProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<LandingPage />} />
-                    
-                    <Route
-                        path="/login"
-                        element={
-                            isLoggedIn ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : (
-                                <Login onLoginSuccess={handleLoginSuccess} />
-                            )
-                        }
-                    />
-
-                    <Route
-                        path="/signup"
-                        element={
-                            isLoggedIn ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : (
-                                <Signup />
-                            )
-                        }
-                    />
-
-                    <Route
-                        path="/dashboard"
-                        element={
-                            isLoggedIn ? (
-                                <Dashboard user={user} onLogout={handleLogout} />
-                            ) : (
-                                <Navigate to="/login" replace />
-                            )
-                        }
-                    />
-
-                    <Route path="/auth/success" element={<AuthSuccess />} />
-                    <Route path="/team" element={<TeamSection />} />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-            </Router>
-        </ThemeProvider>
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
+            <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--accent-primary)' }}></div>
+                <p style={{ color: 'var(--text-primary)' }}>Completing authentication...</p>
+            </div>
+        </div>
     );
 }
-
-export default App;
