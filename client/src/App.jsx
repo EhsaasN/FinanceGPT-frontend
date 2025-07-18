@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export default function AuthSuccess() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate(); // This line is removed
 
     useEffect(() => {
         const handleAuth = async () => {
@@ -12,12 +11,15 @@ export default function AuthSuccess() {
 
             if (error) {
                 console.error('OAuth authentication failed:', error);
-                navigate('/login?error=' + error);
+                // navigate('/login?error=' + error); // This usage of navigate would now be an error.
+                // Revert to window.location.href for consistency and to avoid useNavigate
+                window.location.href = '/login?error=' + error;
                 return;
             }
 
             if (!token) {
-                navigate('/login?error=no_token');
+                // navigate('/login?error=no_token'); // This usage of navigate would now be an error.
+                window.location.href = '/login?error=no_token';
                 return;
             }
 
@@ -39,19 +41,21 @@ export default function AuthSuccess() {
                     localStorage.setItem('fgpt_isLoggedIn', 'true');
 
                     // Force a full page reload to ensure App.jsx re-initializes and picks up login status
-                    window.location.href = '/dashboard'; 
+                    window.location.href = '/dashboard';
                 } else {
                     console.error('User profile not found:', data);
-                    navigate('/login?error=profile_fetch_failed');
+                    // navigate('/login?error=profile_fetch_failed'); // This usage of navigate would now be an error.
+                    window.location.href = '/login?error=profile_fetch_failed';
                 }
             } catch (err) {
                 console.error('Error fetching profile:', err);
-                navigate('/login?error=profile_fetch_failed');
+                // navigate('/login?error=profile_fetch_failed'); // This usage of navigate would now be an error.
+                window.location.href = '/login?error=profile_fetch_failed';
             }
         };
 
         handleAuth();
-    }, [navigate]);
+    }, []); // Removed navigate from dependency array as it's no longer used
 
     return (
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
