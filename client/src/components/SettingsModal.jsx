@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext.jsx'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function SettingsModal({ showSettingsModal, onClose, user, userName }) {
     const [activeSettingsTab, setActiveSettingsTab] = useState('profile')
@@ -35,7 +36,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
         }
 
         try {
-            const response = await fetch('/api/change-password', {
+            const response = await fetch(`${BACKEND_URL}/api/change-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -67,7 +68,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                 <div className="w-64" style={{backgroundColor: 'var(--bg-secondary)', borderRight: '1px solid var(--border-color)'}}>
                     {/* Header */}
                     <div className="flex items-center gap-3 p-4" style={{borderBottom: '1px solid var(--border-color)'}}>
-                        <button 
+                        <button
                             onClick={handleCloseSettings}
                             className="transition-colors"
                             style={{color: 'var(--text-secondary)'}}
@@ -86,8 +87,8 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                         <button
                             onClick={() => setActiveSettingsTab('profile')}
                             className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors ${
-                                activeSettingsTab === 'profile' 
-                                    ? 'text-white' 
+                                activeSettingsTab === 'profile'
+                                    ? 'text-white'
                                     : 'hover:text-white'
                             }`}
                             style={{
@@ -112,12 +113,12 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                             </svg>
                             <span className="text-sm">Profile Information</span>
                         </button>
-                        
+
                         <button
                             onClick={() => setActiveSettingsTab('password')}
                             className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors ${
-                                activeSettingsTab === 'password' 
-                                    ? 'text-white' 
+                                activeSettingsTab === 'password'
+                                    ? 'text-white'
                                     : 'hover:text-white'
                             }`}
                             style={{
@@ -146,8 +147,8 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                         <button
                             onClick={() => setActiveSettingsTab('theme')}
                             className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors ${
-                                activeSettingsTab === 'theme' 
-                                    ? 'text-white' 
+                                activeSettingsTab === 'theme'
+                                    ? 'text-white'
                                     : 'hover:text-white'
                             }`}
                             style={{
@@ -217,7 +218,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                                             onChange={(e) => setCurrentPassword(e.target.value)}
                                             className="w-full rounded-lg px-4 py-3 focus:outline-none"
                                             style={{
-                                                backgroundColor: 'var(--bg-secondary)', 
+                                                backgroundColor: 'var(--bg-secondary)',
                                                 border: '1px solid var(--border-color)',
                                                 color: 'var(--text-primary)'
                                             }}
@@ -234,7 +235,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                                             onChange={(e) => setNewPassword(e.target.value)}
                                             className="w-full rounded-lg px-4 py-3 focus:outline-none"
                                             style={{
-                                                backgroundColor: 'var(--bg-secondary)', 
+                                                backgroundColor: 'var(--bg-secondary)',
                                                 border: '1px solid var(--border-color)',
                                                 color: 'var(--text-primary)'
                                             }}
@@ -251,7 +252,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                             className="w-full rounded-lg px-4 py-3 focus:outline-none"
                                             style={{
-                                                backgroundColor: 'var(--bg-secondary)', 
+                                                backgroundColor: 'var(--bg-secondary)',
                                                 border: '1px solid var(--border-color)',
                                                 color: 'var(--text-primary)'
                                             }}
@@ -263,8 +264,8 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
 
                                     {passwordMessage && (
                                         <div className={`text-sm p-3 rounded-lg ${
-                                            passwordMessage.includes('successfully') 
-                                                ? 'text-green-400 bg-green-400/10 border border-green-400/20' 
+                                            passwordMessage.includes('successfully')
+                                                ? 'text-green-400 bg-green-400/10 border border-green-400/20'
                                                 : 'text-red-400 bg-red-400/10 border border-red-400/20'
                                         }`}>
                                             {passwordMessage}
@@ -292,7 +293,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                                         </label>
                                         <div className="space-y-3">
                                             {/* Dark Theme Option */}
-                                            <div 
+                                            <div
                                                 className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors ${
                                                     isDark ? 'border-purple-500' : 'border-gray-600 hover:border-gray-500'
                                                 }`}
@@ -319,7 +320,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                                             </div>
 
                                             {/* Light Theme Option */}
-                                            <div 
+                                            <div
                                                 className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors ${
                                                     !isDark ? 'border-purple-500' : 'border-gray-600 hover:border-gray-500'
                                                 }`}

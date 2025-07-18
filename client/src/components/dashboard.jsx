@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Bot, User, LogOut, ArrowRight, TrendingUp, Paperclip, XCircle, Loader2, Settings } from 'lucide-react';
+import { MessageSquare, Bot, User, LogOut, ArrowRight, TrendingUp, Paperclip, XCircle, Loader2, Settings, ChevronLeft, ChevronRight } from 'lucide-react';
+import ProfileMenu from './ProfileMenu';
+import SettingsModal from './SettingsModal';
 
 // This is a placeholder hook. Replace with your actual implementation if you have one.
 const useUserData = (user) => {
@@ -23,6 +25,10 @@ const Dashboard = ({ user, onLogout }) => {
     const fileInputRef = useRef(null);
     const chatEndRef = useRef(null);
     const { userName } = useUserData(user);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [showSettingsModal, setShowSettingsModal] = useState(false);
+
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -75,7 +81,7 @@ const Dashboard = ({ user, onLogout }) => {
 
         const userMessage = { id: Date.now(), text: input, sender: 'user', file: uploadedFile };
         setMessages(prev => [...prev, userMessage]);
-        
+
         const currentInput = input;
         const currentFile = uploadedFile;
         setInput('');
@@ -122,35 +128,72 @@ const Dashboard = ({ user, onLogout }) => {
             setIsLoading(false);
         }
     };
-    
+
     const handleLogout = () => {
-        if(onLogout) {
+        if (onLogout) {
             onLogout();
         }
         navigate('/login');
     }
 
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
+    };
+
+
     return (
         <div className="flex h-screen bg-gray-900 text-white font-sans">
-            <aside className="w-64 bg-gray-800 p-4 flex flex-col border-r border-gray-700">
-                 <div className="flex items-center space-x-2 mb-8">
-                    <TrendingUp className="text-green-400 h-8 w-8" />
-                    <h1 className="text-2xl font-bold text-white">Finance GPT</h1>
+            <aside className={`bg-gray-800 p-4 flex flex-col border-r border-gray-700 transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}>
+                <div className="flex items-center justify-between mb-8">
+                    {!isSidebarCollapsed && (
+                        <div className="flex items-center space-x-2">
+                            <TrendingUp className="text-green-400 h-8 w-8" />
+                            <h1 className="text-2xl font-bold text-white">Finance GPT</h1>
+                        </div>
+                    )}
+                    <button onClick={toggleSidebar} className="p-2 rounded-lg hover:bg-gray-700">
+                        {isSidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
+                    </button>
                 </div>
+
                 <nav className="flex-grow">
-                    <h2 className="text-xs text-gray-400 uppercase font-semibold mb-3">Chats</h2>
-                    <a href="#" className="flex items-center p-2 bg-gray-700 rounded-lg text-white"><MessageSquare className="h-5 w-5 mr-3" />Market Analysis</a>
+                    <h2 className={`text-xs text-gray-400 uppercase font-semibold mb-3 ${isSidebarCollapsed ? 'text-center' : ''}`}>{isSidebarCollapsed ? 'Chats' : 'Chats'}</h2>
+                    <a href="#" className={`flex items-center p-2 bg-gray-700 rounded-lg text-white ${isSidebarCollapsed ? 'justify-center' : ''}`}>
+                        <MessageSquare className={`h-5 w-5 ${!isSidebarCollapsed && 'mr-3'}`} />
+                        {!isSidebarCollapsed && 'Market Analysis'}
+                    </a>
                 </nav>
+
                 <div className="mt-auto">
-                    <p className="text-sm text-gray-400 mb-2 truncate" title={user?.email}>Logged in as {userName}</p>
-                    <button onClick={handleLogout} className="w-full flex items-center p-3 bg-gray-700 hover:bg-red-500/80 rounded-lg text-white transition-colors"><LogOut className="h-5 w-5 mr-3" />Logout</button>
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setShowProfileMenu(true)}
+                        onMouseLeave={() => setShowProfileMenu(false)}
+                    >
+                        <div className={`flex items-center p-2 rounded-lg ${isSidebarCollapsed ? 'justify-center' : ''}`}>
+                            <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
+                                <User className="h-6 w-6 text-white" />
+                            </div>
+                            {!isSidebarCollapsed && (
+                                <div className="ml-3">
+                                    <p className="text-sm text-white truncate" title={user?.email}>{userName}</p>
+                                </div>
+                            )}
+                        </div>
+                        {showProfileMenu && (
+                            <ProfileMenu
+                                onLogout={handleLogout}
+                                onSettingsClick={() => setShowSettingsModal(true)}
+                            />
+                        )}
+                    </div>
                 </div>
             </aside>
 
             <main className="flex-1 flex flex-col">
                 <div className="flex-1 p-6 overflow-y-auto">
                     {messages.length === 0 && !isLoading && (
-                         <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                        <div className="flex flex-col items-center justify-center h-full text-gray-400">
                             <Bot size={48} className="mb-4" />
                             <h2 className="text-2xl font-semibold">Welcome to Finance GPT</h2>
                             <p>Ask me anything or upload a document to get started.</p>
@@ -192,13 +235,13 @@ const Dashboard = ({ user, onLogout }) => {
                         <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
                         <button onClick={() => fileInputRef.current.click()} className="p-3 text-gray-400 hover:text-white transition-colors rounded-full"><Paperclip /></button>
                         {/* --- START: Updated Textarea Styling --- */}
-                        <textarea 
-                            value={input} 
-                            onChange={(e) => setInput(e.target.value)} 
-                            onKeyPress={(e) => {if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }}} 
-                            rows="1" 
-                            className="flex-1 bg-transparent outline-none border-none focus:ring-0 px-4 text-white resize-none" 
-                            placeholder="Ask about stocks, or attach a document..." 
+                        <textarea
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyPress={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                            rows="1"
+                            className="flex-1 bg-transparent outline-none border-none focus:ring-0 px-4 text-white resize-none"
+                            placeholder="Ask about stocks, or attach a document..."
                         />
                         {/* --- END: Updated Textarea Styling --- */}
                         <button onClick={handleSend} disabled={isLoading} className="bg-green-500 hover:bg-green-600 text-white font-semibold p-3 rounded-full transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">
@@ -207,6 +250,13 @@ const Dashboard = ({ user, onLogout }) => {
                     </div>
                 </div>
             </main>
+            {showSettingsModal && (
+                <SettingsModal
+                    user={user}
+                    userName={userName}
+                    onClose={() => setShowSettingsModal(false)}
+                />
+            )}
         </div>
     );
 };
