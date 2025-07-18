@@ -33,7 +33,7 @@ export default function AuthSuccess() {
                         localStorage.setItem('fgpt_isLoggedIn', 'true');
 
                         // Redirect to dashboard - this will trigger the app's state update
-                        window.location.href = '/dashboard';
+                        navigate('/dashboard', { replace: true });;
                     } else {
                         navigate('/login?error=profile_fetch_failed');
                     }
