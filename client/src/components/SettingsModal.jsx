@@ -7,7 +7,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [passwordMessage, setPasswordMessage] = useState('')
-    const { theme, toggleTheme, isDark } = useTheme()
+    // const { theme, toggleTheme, isDark } = useTheme() // No longer needed for theme toggle
 
     const handleCloseSettings = () => {
         onClose()
@@ -73,10 +73,8 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                     <div className="flex items-center gap-3 p-4" style={{borderBottom: '1px solid var(--border-color)'}}>
                         <button
                             onClick={handleCloseSettings}
-                            className="transition-colors"
+                            className="transition-colors button-hover rounded-lg p-1" // Added button-hover
                             style={{color: 'var(--text-secondary)'}}
-                            onMouseEnter={(e) => e.target.style.color = 'var(--text-primary)'}
-                            onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -89,7 +87,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                     <div className="p-2">
                         <button
                             onClick={() => setActiveSettingsTab('profile')}
-                            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors ${
+                            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors button-hover ${ // Added button-hover
                                 activeSettingsTab === 'profile'
                                     ? 'text-white'
                                     : 'hover:text-white'
@@ -97,18 +95,6 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                             style={{
                                 backgroundColor: activeSettingsTab === 'profile' ? 'var(--accent-primary)' : 'transparent',
                                 color: activeSettingsTab === 'profile' ? 'var(--bg-primary)' : 'var(--text-secondary)'
-                            }}
-                            onMouseEnter={(e) => {
-                                if (activeSettingsTab !== 'profile') {
-                                    e.target.style.backgroundColor = 'var(--border-color)'
-                                    e.target.style.color = 'var(--text-primary)'
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                if (activeSettingsTab !== 'profile') {
-                                    e.target.style.backgroundColor = 'transparent'
-                                    e.target.style.color = 'var(--text-secondary)'
-                                }
                             }}
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,7 +105,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
 
                         <button
                             onClick={() => setActiveSettingsTab('password')}
-                            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors ${
+                            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors button-hover ${ // Added button-hover
                                 activeSettingsTab === 'password'
                                     ? 'text-white'
                                     : 'hover:text-white'
@@ -128,18 +114,6 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                                 backgroundColor: activeSettingsTab === 'password' ? 'var(--accent-primary)' : 'transparent',
                                 color: activeSettingsTab === 'password' ? 'var(--bg-primary)' : 'var(--text-secondary)'
                             }}
-                            onMouseEnter={(e) => {
-                                if (activeSettingsTab !== 'password') {
-                                    e.target.style.backgroundColor = 'var(--border-color)'
-                                    e.target.style.color = 'var(--text-primary)'
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                if (activeSettingsTab !== 'password') {
-                                    e.target.style.backgroundColor = 'transparent'
-                                    e.target.style.color = 'var(--text-secondary)'
-                                }
-                            }}
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -147,35 +121,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                             <span className="text-sm">Change Password</span>
                         </button>
 
-                        <button
-                            onClick={() => setActiveSettingsTab('theme')}
-                            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-3 transition-colors ${
-                                activeSettingsTab === 'theme'
-                                    ? 'text-white'
-                                    : 'hover:text-white'
-                            }`}
-                            style={{
-                                backgroundColor: activeSettingsTab === 'theme' ? 'var(--accent-primary)' : 'transparent',
-                                color: activeSettingsTab === 'theme' ? 'var(--bg-primary)' : 'var(--text-secondary)'
-                            }}
-                            onMouseEnter={(e) => {
-                                if (activeSettingsTab !== 'theme') {
-                                    e.target.style.backgroundColor = 'var(--border-color)'
-                                    e.target.style.color = 'var(--text-primary)'
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                if (activeSettingsTab !== 'theme') {
-                                    e.target.style.backgroundColor = 'transparent'
-                                    e.target.style.color = 'var(--text-secondary)'
-                                }
-                            }}
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                            </svg>
-                            <span className="text-sm">Theme Settings</span>
-                        </button>
+                        {/* Theme settings removed */}
                     </div>
                 </div>
 
@@ -286,79 +232,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
                             </div>
                         )}
 
-                        {activeSettingsTab === 'theme' && (
-                            <div>
-                                <h3 className="text-xl font-semibold mb-6" style={{color: 'var(--text-primary)'}}>Theme Settings</h3>
-                                <div className="space-y-6">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-4" style={{color: 'var(--text-secondary)'}}>
-                                            Choose your preferred theme
-                                        </label>
-                                        <div className="space-y-3">
-                                            {/* Dark Theme Option */}
-                                            <div
-                                                className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors ${
-                                                    isDark ? 'border-purple-500' : 'border-gray-600 hover:border-gray-500'
-                                                }`}
-                                                style={{
-                                                    backgroundColor: isDark ? 'var(--accent-primary)' : 'var(--bg-secondary)',
-                                                    borderColor: isDark ? 'var(--accent-primary)' : 'var(--border-color)'
-                                                }}
-                                                onClick={() => !isDark && toggleTheme()}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-5 h-5 rounded-full bg-gray-800 border border-gray-600"></div>
-                                                    <div>
-                                                        <div className="font-medium" style={{color: isDark ? 'var(--bg-primary)' : 'var(--text-primary)'}}>Dark Mode</div>
-                                                        <div className="text-sm" style={{color: isDark ? 'var(--bg-primary)' : 'var(--text-secondary)'}}>
-                                                            Dark theme with purple accents
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {isDark && (
-                                                    <svg className="w-5 h-5" style={{color: 'var(--bg-primary)'}} fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                    </svg>
-                                                )}
-                                            </div>
-
-                                            {/* Light Theme Option */}
-                                            <div
-                                                className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors ${
-                                                    !isDark ? 'border-purple-500' : 'border-gray-600 hover:border-gray-500'
-                                                }`}
-                                                style={{
-                                                    backgroundColor: !isDark ? 'var(--accent-primary)' : 'var(--bg-secondary)',
-                                                    borderColor: !isDark ? 'var(--accent-primary)' : 'var(--border-color)'
-                                                }}
-                                                onClick={() => isDark && toggleTheme()}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-5 h-5 rounded-full bg-gray-100 border border-gray-300"></div>
-                                                    <div>
-                                                        <div className="font-medium" style={{color: !isDark ? 'var(--bg-primary)' : 'var(--text-primary)'}}>Light Mode</div>
-                                                        <div className="text-sm" style={{color: !isDark ? 'var(--bg-primary)' : 'var(--text-secondary)'}}>
-                                                            Light theme with purple accents
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {!isDark && (
-                                                    <svg className="w-5 h-5" style={{color: 'var(--bg-primary)'}} fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                    </svg>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="pt-4" style={{borderTop: '1px solid var(--border-color)'}}>
-                                        <div className="text-sm" style={{color: 'var(--text-secondary)'}}>
-                                            Your theme preference will be saved and applied across all sessions.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        {/* Theme settings tab content removed */}
                     </div>
                 </div>
             </div>
