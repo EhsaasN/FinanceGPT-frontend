@@ -7,7 +7,7 @@ import LandingPage from './components/LandingPage';
 import AuthSuccess from './components/AuthSuccess';
 import Team from './components/Team';
 import { ThemeProvider } from './contexts/ThemeContext';
-import './App.css'; // This line fixes the theme toggle and background issues.
+import './App.css';
 
 // A new component to contain the routes, allowing it to use the `useNavigate` hook.
 const AppRoutes = ({ user, isLoggedIn, handleLoginSuccess, handleLogout }) => {
