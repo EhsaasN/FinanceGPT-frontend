@@ -33,7 +33,7 @@ function ProfileMenu({ showProfileMenu, handleMouseEnter, handleMouseLeave, onSe
 
     return (
         <div 
-            className="absolute right-4 top-10 rounded-xl shadow-lg py-2 min-w-[150px] z-10 card-shadow"
+            className="absolute right-0 top-12 rounded-xl shadow-lg py-2 min-w-[150px] z-10 card-shadow"
             style={{backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)'}}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
