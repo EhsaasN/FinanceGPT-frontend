@@ -5,51 +5,52 @@ export default function AuthSuccess() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        const error = urlParams.get('error');
+        const handleAuth = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const error = urlParams.get('error');
 
-        if (error) {
-            console.error('OAuth authentication failed:', error);
-            navigate('/login?error=' + encodeURIComponent(error));
-            return;
-        }
-
-        if (!token) {
-            navigate('/login?error=no_token');
-            return;
-        }
-
-        // Store token
-        localStorage.setItem('authToken', token);
-
-        // Fetch user profile
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+            if (error) {
+                console.error('OAuth authentication failed:', error);
+                navigate('/login?error=' + error);
+                return;
             }
-        })
-        .then(async (response) => {
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Profile fetch failed');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.user) {
-                localStorage.setItem('fgpt_user', JSON.stringify(data.user));
-                localStorage.setItem('fgpt_isLoggedIn', 'true');
-                navigate('/dashboard', { replace: true });
-            } else {
-                throw new Error('User data missing');
-            }
-        })
-        .catch(err => {
-            console.error('AuthSuccess profile fetch error:', err.message);
-            navigate('/login?error=profile_fetch_failed');
-        });
 
+            if (!token) {
+                navigate('/login?error=no_token');
+                return;
+            }
+
+            try {
+                // Store the token immediately
+                localStorage.setItem('authToken', token);
+
+                // Fetch user profile
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                const data = await response.json();
+
+                if (data?.user) {
+                    localStorage.setItem('fgpt_user', JSON.stringify(data.user));
+                    localStorage.setItem('fgpt_isLoggedIn', 'true');
+
+                    // Redirect to dashboard
+                    navigate('/dashboard', { replace: true });
+                } else {
+                    console.error('User profile not found:', data);
+                    navigate('/login?error=profile_fetch_failed');
+                }
+            } catch (err) {
+                console.error('Error fetching profile:', err);
+                navigate('/login?error=profile_fetch_failed');
+            }
+        };
+
+        handleAuth();
     }, [navigate]);
 
     return (
