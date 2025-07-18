@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { TrendingUp } from 'lucide-react';
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-const Login = ({ onLoginSuccess }) => {
-    const navigate = useNavigate(); // Initialize the navigate function
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const Login = ({ onLoginSuccess }) => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState(''); // 'error' or 'success'
+    const [messageType, setMessageType] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -40,9 +41,8 @@ const Login = ({ onLoginSuccess }) => {
 
             const result = await response.json();
             if (response.ok) {
-                setMessage("Login successful!");
-                setMessageType('success');
                 localStorage.setItem('authToken', result.token);
+                // Pass user data to the parent App component, which will handle the redirect.
                 if (onLoginSuccess && result.user) {
                     onLoginSuccess(result.user);
                 }
@@ -57,7 +57,7 @@ const Login = ({ onLoginSuccess }) => {
             setIsLoading(false);
         }
     };
-    
+
     const handleGoogleAuth = () => {
         window.location.href = `${BACKEND_URL}/api/auth/google`;
     };
@@ -66,7 +66,6 @@ const Login = ({ onLoginSuccess }) => {
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white font-sans">
             <div className="absolute top-6 left-6">
                  <button
-                    // Use navigate to go to the landing page
                     onClick={() => navigate('/')}
                     className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
                 >
@@ -76,7 +75,6 @@ const Login = ({ onLoginSuccess }) => {
             </div>
             <div className="w-full max-w-md p-8 bg-gray-800 rounded-2xl shadow-2xl border border-gray-700">
                 <h2 className="text-3xl font-bold text-center text-white mb-4">Welcome Back</h2>
-                {/* Use navigate to go to the signup page */}
                 <p className="text-center text-gray-400 mb-8">Don't have an account? <button onClick={() => navigate('/signup')} className="font-semibold text-green-400 hover:text-green-300">Sign Up</button></p>
 
                 {message && (

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function AuthSuccess() {
+export default function AuthSuccess({ onLoginSuccess }) {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,24 +22,17 @@ export default function AuthSuccess() {
             }
 
             try {
-                // Store the token immediately
                 localStorage.setItem('authToken', token);
-
-                // Fetch user profile
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
+                    headers: { 'Authorization': `Bearer ${token}` },
                 });
-
                 const data = await response.json();
 
                 if (data?.user) {
-                    localStorage.setItem('fgpt_user', JSON.stringify(data.user));
-                    localStorage.setItem('fgpt_isLoggedIn', 'true');
-
-                    // Redirect to dashboard
-                    navigate('/dashboard', { replace: true });
+                    // Pass user data to the parent App component, which will handle the redirect.
+                    if (onLoginSuccess) {
+                        onLoginSuccess(data.user);
+                    }
                 } else {
                     console.error('User profile not found:', data);
                     navigate('/login?error=profile_fetch_failed');
@@ -51,7 +44,7 @@ export default function AuthSuccess() {
         };
 
         handleAuth();
-    }, [navigate]);
+    }, [navigate, onLoginSuccess]);
 
     return (
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
