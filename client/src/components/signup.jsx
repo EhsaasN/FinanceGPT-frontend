@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp } from 'lucide-react'; // Import TrendingUp icon
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Signup = () => {
         setMessage('');
 
         try {
-            const response = await fetch('/api/auth/register', {
+            const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name: name.trim(), email: email.trim(), password }),
@@ -48,7 +49,7 @@ const Signup = () => {
     };
 
     const handleGoogleAuth = () => {
-        window.location.href = '/api/auth/google';
+        window.location.href = `${BACKEND_URL}/api/auth/google`;
     };
 
     return (

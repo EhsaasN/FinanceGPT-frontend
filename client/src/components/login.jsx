@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { TrendingUp } from 'lucide-react';
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const Login = ({ onLoginSuccess }) => {
     const navigate = useNavigate(); // Initialize the navigate function
 
@@ -32,7 +32,7 @@ const Login = ({ onLoginSuccess }) => {
         setMessage('');
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch(`${BACKEND_URL}/api/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: email.trim(), password }),
@@ -59,7 +59,7 @@ const Login = ({ onLoginSuccess }) => {
     };
     
     const handleGoogleAuth = () => {
-        window.location.href = '/api/auth/google';
+        window.location.href = `${BACKEND_URL}/api/auth/google`;
     };
 
     return (
