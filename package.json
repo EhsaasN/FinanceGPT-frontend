@@ -3,15 +3,8 @@
   "version": "1.0.0",
   "description": "Full-stack FGPT application",
   "scripts": {
-    "backend": "cd server && npm install && npx prisma generate",
-    "requirements": "cd FastAPI_Server && pip install -r requirements.txt",
-    "frontend": "cd client && npm install",
-    "setup": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run requirements\"",
-    "dev": "concurrently \"npm run client:dev\"",
-    "fastapi": "cd FastAPI_Server && uvicorn Graph:app --host 127.0.0.1 --port 8000",
-    "server:start": "cd server && npm start",
-    "client:dev": "cd client && npm run dev",
-    "start": "concurrently \"npm run dev\" \"npm run fastapi\""
+    "dev": "cd client && npm run dev",
+    "start": "concurrently \"npm run dev\""
   },
   "devDependencies": {
     "concurrently": "^9.2.0"
