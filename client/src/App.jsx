@@ -5,7 +5,7 @@ import Signup from './components/signup';
 import Dashboard from './components/dashboard';
 import LandingPage from './components/LandingPage';
 import AuthSuccess from './components/AuthSuccess';
-import TeamSection from './components/Team'; // Import the new Team component
+import TeamSection from './components/Team';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import './App.css';
 
@@ -19,7 +19,7 @@ function App() {
             try {
                 const storedUser = localStorage.getItem('fgpt_user');
                 const storedLoginStatus = localStorage.getItem('fgpt_isLoggedIn');
-                
+
                 if (storedUser && storedLoginStatus === 'true') {
                     const userData = JSON.parse(storedUser);
                     setUser(userData);
@@ -70,11 +70,41 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
-                    <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login onLoginSuccess={handleLoginSuccess} />} />
-                    <Route path="/signup" element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Signup />} />
-                    <Route path="/dashboard" element={isLoggedIn ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/login" replace />} />
+                    
+                    <Route
+                        path="/login"
+                        element={
+                            isLoggedIn ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : (
+                                <Login onLoginSuccess={handleLoginSuccess} />
+                            )
+                        }
+                    />
+
+                    <Route
+                        path="/signup"
+                        element={
+                            isLoggedIn ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : (
+                                <Signup />
+                            )
+                        }
+                    />
+
+                    <Route
+                        path="/dashboard"
+                        element={
+                            isLoggedIn ? (
+                                <Dashboard user={user} onLogout={handleLogout} />
+                            ) : (
+                                <Navigate to="/login" replace />
+                            )
+                        }
+                    />
+
                     <Route path="/auth/success" element={<AuthSuccess />} />
-                    {/* Add the new route for the team page */}
                     <Route path="/team" element={<TeamSection />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
