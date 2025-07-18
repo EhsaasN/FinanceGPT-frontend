@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext.jsx'
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 function SettingsModal({ showSettingsModal, onClose, user, userName }) {
     const [activeSettingsTab, setActiveSettingsTab] = useState('profile')
     const [currentPassword, setCurrentPassword] = useState('')
@@ -36,7 +36,7 @@ function SettingsModal({ showSettingsModal, onClose, user, userName }) {
 
         try {
             const token = localStorage.getItem('authToken');
-            const response = await fetch('/api/change-password', {
+            const response = await fetch(`${BACKEND_URL}/api/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
