@@ -188,16 +188,23 @@ const Dashboard = ({ user, onLogout }) => {
                             <button onClick={() => setUploadedFile(null)} className="text-gray-400 hover:text-white"><XCircle size={18} /></button>
                         </div>
                     )}
-                    {/* --- START: Updated Chatbox Styling --- */}
                     <div className="flex items-center bg-gray-700 rounded-full p-2">
                         <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
                         <button onClick={() => fileInputRef.current.click()} className="p-3 text-gray-400 hover:text-white transition-colors rounded-full"><Paperclip /></button>
-                        <textarea value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => {if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }}} rows="1" className="flex-1 bg-transparent outline-none px-4 text-white resize-none" placeholder="Ask about stocks, or attach a document..." />
+                        {/* --- START: Updated Textarea Styling --- */}
+                        <textarea 
+                            value={input} 
+                            onChange={(e) => setInput(e.target.value)} 
+                            onKeyPress={(e) => {if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }}} 
+                            rows="1" 
+                            className="flex-1 bg-transparent outline-none border-none focus:ring-0 px-4 text-white resize-none" 
+                            placeholder="Ask about stocks, or attach a document..." 
+                        />
+                        {/* --- END: Updated Textarea Styling --- */}
                         <button onClick={handleSend} disabled={isLoading} className="bg-green-500 hover:bg-green-600 text-white font-semibold p-3 rounded-full transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">
                             <ArrowRight className="h-6 w-6" />
                         </button>
                     </div>
-                    {/* --- END: Updated Chatbox Styling --- */}
                 </div>
             </main>
         </div>
