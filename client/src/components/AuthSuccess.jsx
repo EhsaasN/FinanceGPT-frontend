@@ -11,40 +11,45 @@ export default function AuthSuccess() {
 
         if (error) {
             console.error('OAuth authentication failed:', error);
-            navigate('/login?error=' + error);
+            navigate('/login?error=' + encodeURIComponent(error));
             return;
         }
 
-        if (token) {
-            // Store the token
-            localStorage.setItem('authToken', token);
-
-            // Fetch user data
-            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.user) {
-                        // Store user data in the same format as the existing app
-                        localStorage.setItem('fgpt_user', JSON.stringify(data.user));
-                        localStorage.setItem('fgpt_isLoggedIn', 'true');
-
-                        // Redirect to dashboard - this will trigger the app's state update
-                        navigate('/dashboard', { replace: true });;
-                    } else {
-                        navigate('/login?error=profile_fetch_failed');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching user profile:', error);
-                    navigate('/login?error=profile_fetch_failed');
-                });
-        } else {
+        if (!token) {
             navigate('/login?error=no_token');
+            return;
         }
+
+        // Store token
+        localStorage.setItem('authToken', token);
+
+        // Fetch user profile
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(async (response) => {
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Profile fetch failed');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.user) {
+                localStorage.setItem('fgpt_user', JSON.stringify(data.user));
+                localStorage.setItem('fgpt_isLoggedIn', 'true');
+                navigate('/dashboard', { replace: true });
+            } else {
+                throw new Error('User data missing');
+            }
+        })
+        .catch(err => {
+            console.error('AuthSuccess profile fetch error:', err.message);
+            navigate('/login?error=profile_fetch_failed');
+        });
+
     }, [navigate]);
 
     return (
