@@ -4,10 +4,7 @@
   "description": "Full-stack FGPT application",
   "scripts": {
     "dev": "cd client && npm run dev",
-    "start": "concurrently \"npm run dev\""
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.0"
+    "start": "npm run dev"
   },
   "workspaces": [
     "client",
