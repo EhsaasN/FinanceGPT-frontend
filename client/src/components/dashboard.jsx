@@ -10,7 +10,7 @@ const useUserData = (user) => {
 // --- START: Deployment Configuration ---
 // Get the base URLs for the two different APIs from environment variables.
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-const FASTAPI_URL = import.meta.env.VITE_FASTAPI_URL || 'http://localhost:8000';
+const FASTAPI_URL = import.meta.env.VITE_FASTAPI_URL;
 // --- END: Deployment Configuration ---
 
 
