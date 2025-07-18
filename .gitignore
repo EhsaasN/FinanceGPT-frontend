@@ -1,0 +1,21 @@
+rough.py
+.env
+docQnAaditya.py
+GeneralQnA.py
+*.env
+**/.env
+.DS_Store
+.Rhistory
+__pycache__
+/miscellaneous/
+/Notebooks/
+/faiss_cache/
+2PageNvidia.pdf
+/.ipynb_checkpoints/
+graph.ipynb
+/FastAPI_Server /Graph.ipynb/
+.vscode
+node_modules
+/server/prisma/migrations/
+
+
