@@ -78,7 +78,7 @@ const LandingPage = () => {
                 <div className="relative z-10">
                     {/* --- START: Updated Text --- */}
                     <h2 className="text-5xl md:text-7xl font-extrabold mb-4 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-500">
-                        Frontier AI.
+                        Finance-GPT.
                         <br />
                         Your personal AI financial analyst
                     </h2>
