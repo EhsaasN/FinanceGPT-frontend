@@ -29,8 +29,8 @@ const LandingPage = () => {
         },
         {
             icon: <ShieldCheck className="h-10 w-10 text-red-400" />,
-            title: "Law Agent",
-            description: "Navigate complex financial regulations and legal requirements with ease."
+            title: "Document Summary",
+            description: "Summarize complex financial documents quickly and efficiently with AI."
         }
     ];
 
