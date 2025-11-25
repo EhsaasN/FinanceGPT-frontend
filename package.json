@@ -4,7 +4,8 @@
   "description": "Full-stack FGPT application",
   "scripts": {
     "dev": "cd client && npm run dev",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "build": "cd client && npm run build"
   },
   "workspaces": [
     "client",
